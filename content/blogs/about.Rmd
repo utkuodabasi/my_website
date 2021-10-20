@@ -14,7 +14,7 @@ categories:
   
   
   
-```{r,echo=FALSEout.width="20%"}
+```{r,echo=FALSE, out.width="20%"}
 knitr::include_graphics("/img/pic07.jpg",error =FALSE) 
 ```
 
