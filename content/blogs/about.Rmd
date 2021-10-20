@@ -13,7 +13,7 @@ title: About Me!
 ---
   
 ```{r setup, include=FALSE, out.width="100%"}
-knitr::include_graphics("/img/blogs/pic07.jpg", error=FALSE) 
+knitr::include_graphics("/img/pic07.jpg",error =FALSE) 
 ```
 
 
@@ -24,3 +24,5 @@ Hello visitor! My name is Utku Odabasi, I am studying [Master of Financial Analy
 
 * I have graduated from Istanbul Technical University / Vienna University of Technology
 * I have internships in various industries including Telco, Tech, Asset Management and Management Consulting
+
+knitr::include_graphics("/img/pic1.jpg",error =FALSE)
