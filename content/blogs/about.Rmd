@@ -6,7 +6,7 @@ slug: about
 categories: R
 ---
 
-```{r setup, include=FALSE\ out.width="100%"}
+```{r setup, include=FALSE, out.width="100%"}
 knitr::include_graphics("/img/blogs/pic07.jpg", error=FALSE) 
 ```
 
