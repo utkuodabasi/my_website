@@ -18,7 +18,7 @@ categories:
 knitr::include_graphics("/img/pic07.jpg",error =FALSE) 
 ```
 
-#Some information about me
+## Some information about me
 
 Hello visitor! My name is Utku Odabasi, I am studying *Master of Financial Analysis* in *London Business School*. I am passionate about creating valuable impact. That is why I am aiming to have a career in management consulting.
 
