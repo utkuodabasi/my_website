@@ -3,7 +3,7 @@ title: "About Me!"
 date: '2021-09-30'
 description: Risk-Return of DJIA stocks
 draft: no
-image: pic07.jpg
+#image: pic07.jpg
 keywords: ''
 slug: about
 categories:
@@ -18,9 +18,10 @@ categories:
 knitr::include_graphics("/img/pic07.jpg",error =FALSE) 
 ```
 
+#Some information about me
 
-Hello visitor! My name is Utku Odabasi, I am studying [Master of Financial Analysis] in *London Business School*. I am passionate about creating valuable impact. That is why I am aiming to have a career in management consulting.
+Hello visitor! My name is Utku Odabasi, I am studying *Master of Financial Analysis* in *London Business School*. I am passionate about creating valuable impact. That is why I am aiming to have a career in management consulting.
 
-* I have graduated from Istanbul Technical University / Vienna University of Technology
+* I have graduated from Istanbul Technical University, reach link [here](https://www.itu.edu.tr/en/homepage)
 * I have internships in various industries including Telco, Tech, Asset Management and Management Consulting
 
