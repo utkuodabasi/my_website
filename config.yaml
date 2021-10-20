@@ -8,16 +8,15 @@ params:
   banner:
     buttonText: Get Started
     subtitle: |-
-      A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-      AND RELEASED UNDER THE CREATIVE COMMONS.
-    title: Hi, my name is Utku Odabasi
+      This is a website where you can view my skills, experiences and hobbies. 
+    title: Hi, my name is Utku Odabasi, I'm a student at London Business School
   blog: {}
   contact:
     address:
-      - city: London, ST 12330
+      - city: London, NW14SA
         country: UK
-        street: LBS
-        title: Address
+        street: Regent's Park
+        title: Address LBS
     buttonClear: Clear
     buttonSend: Send message
     email:
@@ -25,7 +24,7 @@ params:
         title: Email
     enable: yes
     phone:
-      - phone: (000) 000-0000 x1234
+      - phone: (+44) 739-239-9822
         title: Phone
   custom_css: []
   custom_js: []
@@ -35,56 +34,56 @@ params:
     text: Please visit [this page](/)
   favicon: favicon.ico
   footer:
-    copyright: Company Name
+    copyright: Utku Odabasi, London Business School
     enable: yes
     quicklinks:
-      - alt: HTML5 UP
-        text: 'Design: '
-        url: https://www.html5up.net
+      - alt: utkuodabasi.com
+        text: 'Also visit: '
+        url: https://www.utkuodabasi.com/
     social:
       - icon: fa-twitter
         label: Twitter
-        url: https://www.twitter.com
+        url: https://twitter.com/odabasi_utku
       - icon: fa-facebook
         label: Facebook
-        url: https://www.facebook.com
+        url: https://www.facebook.com/profile.php?id=606847401
       - icon: fa-instagram
         label: Instagram
-        url: https://www.instagram.com
+        url: https://www.instagram.com/utku943/
       - icon: fa-github
         label: GitHub
-        url: https://www.github.com
+        url: https://github.com/utkuodabasi/
       - icon: fa-linkedin
         label: LinkedIn
-        url: https://www.linkedin.com
+        url: https://www.linkedin.com/in/utku-odabasi/
   image: ''
-  name: Your name
+  name: Utku Odabasi
   navigation:
     button1:
-      - name: Get Started
-        url: blogs
-    button2:
-      - name: Log In
-        url: '#'
+      - name: Let's get started
+        url: contents
+#    button2:
+#     - name: Log In
+#        url: '#'
     links:
       - name: Home
         url: '#'
-      - name: Blogs
-        url: blogs
-      - name: Generic Blog
-        url: blogs/ipsum
-      - name: Elements
-        url: elements.html
+      - name: Contents
+        url: contents
+#      - name: Generic Blog
+#        url: blogs/ipsum
+#      - name: Elements
+#        url: elements.html
     menu: Menu
-    subtitle: By HTML5 Up
-    title: Forty
+    subtitle: More!
+    title: Engage
   tiles:
     enable: yes
     showcase:
-      - image: pic01.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Aliquam
-        url: blogs/aliquam
+      - image: pic07.jpg
+        subtitle: Utku Odabasi
+        title: About
+        url: blogs/about
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
         title: Tempus
