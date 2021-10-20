@@ -69,7 +69,7 @@ params:
       - name: Home
         url: '#'
       - name: About
-        url: blogs/about
+        url: blogs/blog1
       - name: Generic Blog
         url: blogs/ipsum
       - name: Elements
@@ -83,7 +83,7 @@ params:
       - image: pic07.jpg
         subtitle: Learn about me!
         title: About
-        url: blogs/about
+        url: blogs/blog1
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
         title: Tempus
