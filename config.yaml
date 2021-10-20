@@ -70,8 +70,8 @@ params:
         url: '#'
       - name: About
         url: blogs/about
-      - name: Generic Blog
-        url: blogs/ipsum
+      - name: My Resume
+        url: blogs/cv
       - name: Elements
         url: elements.html
     menu: Menu
@@ -84,10 +84,10 @@ params:
         subtitle: Learn about me!
         title: About
         url: blogs/about
-      - image: pic02.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Tempus
-        url: blogs/tempus
+      - image: cv_default.jpg
+        subtitle: See my resume!
+        title: Resume
+        url: blogs/cv
       - image: pic03.jpg
         subtitle: Lorem Etiam Nullam
         title: Magna

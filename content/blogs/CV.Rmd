@@ -1,0 +1,20 @@
+---
+title: "My Resume"
+date: '2021-09-30'
+description: Risk-Return of DJIA stocks
+draft: no
+#image: pic07.jpg
+keywords: ''
+slug: cv
+categories:
+- ''
+- ''
+---
+  
+  
+  
+  
+```{r,echo=FALSE, out.width="100%"}
+knitr::include_graphics("/img/CV1.jpg",error =FALSE) 
+```
+
