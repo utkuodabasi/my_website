@@ -72,7 +72,7 @@ params:
         url: blogs/about
       - name: My Resume
         url: blogs/cv
-      - name: US Vaccination Study
+      - name: German 2021 Election Poll Study
         url: blogs/US
       - name: Elements2
         url: elements.html        
@@ -91,8 +91,8 @@ params:
         title: Resume
         url: blogs/cv
       - image: vac.jpg
-        subtitle: US Vaccination Study
-        title: Vaccination -Vote
+        subtitle: German 2021 Election Poll Study
+        title: Election prediction
         url: blogs/US
       - image: pic04.jpg
         subtitle: Nisl Sed Aliquam
