@@ -3,7 +3,6 @@ title: "A Study Comparing Vaccination Population by Votes"
 date: '2021-09-30'
 description: Risk-Return of DJIA stocks
 draft: no
-#image: pic07.jpg
 keywords: ''
 slug: US
 categories:
@@ -14,3 +13,67 @@ categories:
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<pre class="r"><code>url &lt;- &quot;https://en.wikipedia.org/wiki/Opinion_polling_for_the_2021_German_federal_election&quot;
+
+# similar graphs and analyses can be found at 
+# https://www.theguardian.com/world/2021/jun/21/german-election-poll-tracker-who-will-be-the-next-chancellor
+# https://www.economist.com/graphic-detail/who-will-succeed-angela-merkel
+
+
+# get tables that exist on wikipedia page 
+tables &lt;- url %&gt;% 
+  read_html() %&gt;% 
+  html_nodes(css=&quot;table&quot;)
+
+
+# parse HTML tables into a dataframe called polls 
+# Use purr::map() to create a list of all tables in URL
+polls &lt;- map(tables, . %&gt;% 
+             html_table(fill=TRUE)%&gt;% 
+             janitor::clean_names())
+
+
+# list of opinion polls
+german_election_polls &lt;- polls[[1]] %&gt;% # the first table on the page contains the list of all opinions polls
+  slice(2:(n()-1)) %&gt;%  # drop the first row, as it contains again the variable names and last row that contains 2017 results
+  mutate(
+         # polls are shown to run from-to, e.g. 9-13 Aug 2021. We keep the last date, 13 Aug here, as the poll date
+         # and we extract it by picking the last 11 characters from that field
+         end_date = str_sub(fieldwork_date, -11),
+         
+         # end_date is still a string, so we convert it into a date object using lubridate::dmy()
+         end_date = dmy(end_date),
+         
+         # we also get the month and week number from the date, if we want to do analysis by month- week, etc.
+         month = month(end_date),
+         week = isoweek(end_date)
+         )
+
+
+  ggplot(data = german_election_polls) + 
+  
+    geom_point(aes(x=end_date, y=union, col=&quot;Union&quot;), alpha=2/10) + 
+    geom_point(aes(x=end_date, y=spd, col=&#39;SPD&#39;), alpha=2/10) +
+    geom_point(aes(x=end_date, y=af_d, col=&#39;AfD&#39;), alpha=2/10) +
+    geom_point(aes(x=end_date, y=fdp,col=&#39;FDP&#39;), alpha=2/10) +
+    geom_point(aes(x=end_date, y=linke,col=&#39;Linke&#39;), alpha=2/10) +
+    geom_point(aes(x=end_date, y=grune,col=&#39;Grüne&#39;), alpha=2/10) +
+    
+    geom_smooth(aes(x=end_date, y=union, col=&quot;Union&quot;), size=0.5,se=FALSE) + 
+    geom_smooth(aes(x=end_date, y=spd, col=&#39;SPD&#39;), size=0.5, se=FALSE) +
+    geom_smooth(aes(x=end_date, y=af_d, col=&#39;AfD&#39;), size=0.5,  se=FALSE) +
+    geom_smooth(aes(x=end_date, y=fdp, col=&#39;FDP&#39;),  size=0.5, se=FALSE) +
+    geom_smooth(aes(x=end_date, y=linke, col=&#39;Linke&#39;),  size=0.5,se=FALSE) +
+    geom_smooth(aes(x=end_date, y=grune, col=&#39;Grüne&#39;),  size=0.5,se=FALSE) +
+    
+  scale_y_continuous(labels = function(x) paste0(x, &quot;%&quot;)) + #y axes in percentages
+  scale_x_date(breaks = &quot;2 months&quot;,date_labels=&quot;%b %Y&quot;) + #format the dates on x axes+
+  scale_color_discrete(breaks= c(&quot;Union&quot;, &quot;SPD&quot;, &quot;AfD&quot;,&quot;FDP&quot;,&quot;Linke&quot;,&quot;Grüne&quot;))+ #Reorder items in legend 
+  labs(title=NULL,x=NULL, y= NULL, colour=&quot;&quot; ) #deleting axes and legend labels</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/blogs/US_files/figure-html/unnamed-chunk-1-1.png" width="100%" /></p>
