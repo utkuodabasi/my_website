@@ -14,15 +14,13 @@ categories:
   
   
   
-```{r setup, include=FALSE, out.width="20%"}
+```{r, out.width="20%"}
 knitr::include_graphics("/img/pic07.jpg",error =FALSE) 
 ```
 
-![](pic07.jpg ){width=20%}
 
 Hello visitor! My name is Utku Odabasi, I am studying [Master of Financial Analysis] in *London Business School*. I am passionate about creating valuable impact. That is why I am aiming to have a career in management consulting.
 
 * I have graduated from Istanbul Technical University / Vienna University of Technology
 * I have internships in various industries including Telco, Tech, Asset Management and Management Consulting
 
-knitr::include_graphics("/img/pic1.jpg",error =FALSE)
