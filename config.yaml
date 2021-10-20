@@ -59,21 +59,21 @@ params:
   image: ''
   name: Utku Odabasi
   navigation:
-    button1:
-      - name: Let's get started
-        url: contents
+#    button1:
+#      - name: Let's get started
+#        url: contents
 #    button2:
 #     - name: Log In
 #        url: '#'
     links:
       - name: Home
         url: '#'
-      - name: Contents
-        url: contents
-#      - name: Generic Blog
-#        url: blogs/ipsum
-#      - name: Elements
-#        url: elements.html
+      - name: About
+        url: about
+      - name: Generic Blog
+        url: blogs/ipsum
+      - name: Elements
+        url: elements.html
     menu: Menu
     subtitle: More!
     title: Engage
@@ -81,9 +81,9 @@ params:
     enable: yes
     showcase:
       - image: pic07.jpg
-        subtitle: Utku Odabasi
+        subtitle: Learn about me!
         title: About
-        url: blogs/about
+        url: about
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
         title: Tempus
