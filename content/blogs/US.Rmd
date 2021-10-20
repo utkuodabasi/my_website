@@ -1,0 +1,90 @@
+---
+title: "A Study Comparing Vaccination Population by Votes"
+date: '2021-09-30'
+description: Risk-Return of DJIA stocks
+draft: no
+#image: pic07.jpg
+keywords: ''
+slug: US
+categories:
+- ''
+- ''
+---
+  
+  
+  
+  
+```{r,out.width="100%"}
+# Download CDC vaccination by county
+cdc_url <- "https://data.cdc.gov/api/views/8xkx-amqh/rows.csv?accessType=DOWNLOAD"
+vaccinations <- vroom(cdc_url) %>% 
+  janitor::clean_names() %>% 
+  filter(fips != "UNK") # remove counties that have an unknown (UNK) FIPS code
+
+# Download County Presidential Election Returns
+# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
+
+
+election2020_results <- vroom(here::here("data","countypres_2000-2020.csv" )) %>% 
+  janitor::clean_names() %>% 
+  
+  # just keep the results for the 2020 election
+  filter(year == "2020") %>% 
+  
+  # change original name county_fips to fips, to be consistent with the other two files
+  rename (fips = county_fips)
+
+# Download county population data
+population_url <- "https://www.ers.usda.gov/webdocs/DataFiles/48747/PopulationEstimates.csv?v=2232"
+population <- vroom(population_url) %>% 
+  janitor::clean_names() %>% 
+  
+  # select the latest data, namely 2019
+  select(fips = fip_stxt, pop_estimate_2019) %>% 
+  
+  # pad FIPS codes with leading zeros, so they are always made up of 5 characters
+  mutate(fips = stringi::stri_pad_left(fips, width=5, pad = "0"))
+
+#Filtering out irrelevant data from election results
+trump2020_results <- election2020_results %>% 
+  filter (candidate == 'DONALD J TRUMP', mode == 'TOTAL') %>% 
+  select(fips, candidatevotes, totalvotes) %>% #we only need these three datasets
+  mutate (percentage_trump=candidatevotes/totalvotes*100) %>% #creating new column for trump votes %
+  select (-candidatevotes, -totalvotes) #removing these columns as we don't need them anymore
+
+#Filtering out irrelevant data from Vaccinations
+vaccinations_cleaned <- vaccinations %>% 
+  filter (date == '07/04/2021') %>% #Filtering for July 4, 2021
+  mutate (pct_vaccinated=case_when(recip_state %in% c ('CA', 'GA', 'IA', 'MI', 'TX') ~ administered_dose1_pop_pct,
+      T ~ series_complete_pop_pct)) %>%
+  #Using administered doses % data instead of complete pop for exemptions - using professor's help on Slack
+  select(fips, pct_vaccinated) %>% #Just keep necessary columns
+  filter (pct_vaccinated > 0.0) #Filter out pct_vaccinated = 0% 
+
+#Joining election result data and vaccination data 
+merged_data <- trump2020_results %>% 
+  left_join (population, by='fips') %>% 
+  left_join (vaccinations_cleaned, by='fips') 
+
+#Creating the graph
+ggplot(merged_data, aes(x=percentage_trump, y=pct_vaccinated)) +
+  geom_point(size=1.5) + #to create a point
+  geom_point(alpha=0.3, aes(size = pop_estimate_2019), colour='black') + #to create a bubble with opacity 0.3
+  scale_size(range = c(.1, 40), name="Population") + #to define bubble size
+  geom_smooth(method="lm", se=F, color="black") + #to add a line
+  ggtitle("Covid 19 Vaccination Levels Out of Total Population by County") +
+  xlab("2020 Trump Vote %") +
+  ylab("% of Total Population Vaccinated")+
+  annotate("rect", xmin=-Inf, xmax=55, ymin=-Inf, ymax=Inf, alpha=0.25, fill="blue") +
+  annotate("rect", xmin=45, xmax=Inf, ymin=-Inf, ymax=Inf, alpha=0.25, fill="red") +
+  theme(panel.background = element_rect(fill = "#ffffff", colour = "#000000", size = 1, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.1, linetype = 'solid',
+                                colour = "black"), 
+  panel.grid.minor = element_line(size = 0.1, linetype = 'solid',
+                                colour = "black")) +
+  theme(plot.title = element_text(size = 20, face = "bold"))+
+  theme(legend.position = "none")
+
+
+```
+

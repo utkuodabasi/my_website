@@ -72,8 +72,10 @@ params:
         url: blogs/about
       - name: My Resume
         url: blogs/cv
-      - name: Elements
-        url: elements.html
+      - name: US Vaccination Study
+        url: blogs/US
+      - name: Elements2
+        url: elements.html        
     menu: Menu
     subtitle: More!
     title: Engage
@@ -88,10 +90,10 @@ params:
         subtitle: See my resume!
         title: Resume
         url: blogs/cv
-      - image: pic03.jpg
-        subtitle: Lorem Etiam Nullam
-        title: Magna
-        url: blogs/magna
+      - image: vac.jpg
+        subtitle: US Vaccination Study
+        title: Vaccination -Vote
+        url: blogs/US
       - image: pic04.jpg
         subtitle: Nisl Sed Aliquam
         title: Ipsum
