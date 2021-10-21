@@ -95,9 +95,9 @@ params:
         title: Election prediction
         url: blogs/US
       - image: bike.jpg
-        subtitle: blogs/bike
-        title: Ipsum
-        url: blogs/ipsum
+        subtitle: A study about bike rentals
+        title: Bike Rentals
+        url: blogs/bike
       - image: pic05.jpg
         subtitle: Ipsum Dolor Sit Amet
         title: Consequat
