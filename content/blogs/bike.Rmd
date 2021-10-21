@@ -1,0 +1,131 @@
+---
+title: "A Study Comparing the Bike Rentals in London"
+date: '2021-09-30'
+description: Risk-Return of DJIA stocks
+draft: no
+keywords: ''
+slug: bike
+categories:
+- ''
+- ''
+---
+  
+  
+  
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest) # to scrape wikipedia page
+library(scales)
+library(infer)
+library(readxl)
+library(httr)
+```
+
+  
+```{r,out.width="100%"}
+
+url <- "https://data.london.gov.uk/download/number-bicycle-hires/ac29363e-e0cb-47cc-a97a-e216d900a6b0/tfl-daily-cycle-hires.xlsx"
+
+# Download TFL data to temporary file
+httr::GET(url, write_disk(bike.temp <- tempfile(fileext = ".xlsx")))
+
+
+# Use read_excel to read it as dataframe
+bike0 <- read_excel(bike.temp,
+                   sheet = "Data",
+                   range = cell_cols("A:B"))
+
+# change dates to get year, month, and week
+bike <- bike0 %>% 
+  clean_names() %>% 
+  rename (bikes_hired = number_of_bicycle_hires) %>% 
+  mutate (year = year(day),
+          month = lubridate::month(day, label = TRUE),
+          week = isoweek(day))
+
+
+#get average monthly data
+bike_monthly_average<- bike %>% 
+  filter(year>=2016) %>%
+  filter(year<=2019) %>% 
+  group_by(month) %>% 
+  summarise(monthly_average = mean(bikes_hired))
+
+#merge average monthly data with bike data frame
+merged_bike <- bike %>% 
+  left_join(bike_monthly_average,by="month") %>% 
+  mutate(month = month(day))
+
+#Calculate the difference between the expected and actual
+adjusted_merged_bike <- merged_bike %>% 
+  filter(year>=2016) %>%
+  group_by(year,month) %>% 
+  summarise(bike_rentals = mean(bikes_hired),year=year,month=month,monthly_average=monthly_average) %>% 
+  mutate(difference = monthly_average - bike_rentals) %>% 
+  mutate(group=ifelse(difference <= 0, "A", "B") )
+
+adjusted_merged_bike %>% 
+  ggplot(aes(x=month))+
+  geom_ribbon(aes(ymin=bike_rentals,ymax=monthly_average,fill =group),alpha=0.3,size=0.2)+
+  geom_line(aes(y=bike_rentals))+
+  geom_line(aes(y=monthly_average),color="blue")+
+  scale_x_continuous(breaks=NULL)+
+  labs(title="Monthly changes in Tfl bike rentals",subtitle = "Change from monthly average shown in \nblue and calculated between 2016-2019",caption = "Source: Tfl, London Data Store")+
+  scale_fill_manual(values=c("green", "red"), name="fill")+
+  xlab(NULL) +
+  ylab("Bike rentals")+
+  theme_minimal()+
+  theme(legend.position = "none",text = element_text(size=10))+
+  geom_vline(xintercept = c(1,2,3,4,5,6,7,8,9,10,11,12),size=0.0001, color="gray")+
+  ylim(10000,47000)+
+  facet_wrap(~year)
+#get average weekly data
+bike_weekly_average<- bike %>% 
+  filter(year>=2016) %>%
+  filter(year<=2019) %>% 
+  group_by(week) %>% 
+  summarise(weekly_average = mean(bikes_hired))
+
+#merge average weekly data with bike data frame
+merged_bike_weekly <- bike %>% 
+  left_join(bike_weekly_average,by="week")
+  
+#Calculate the difference in percentage from expected
+adjusted_weekly_merged_bike <- merged_bike_weekly %>% 
+  filter(year>=2016) %>%
+  group_by(year,week) %>% 
+  summarise(bike_rentals = mean(bikes_hired),year=year,week=week,weekly_average=weekly_average,) %>%
+  mutate(percentage = (bike_rentals - weekly_average )/weekly_average )%>% 
+  mutate(group=ifelse(percentage <= 0, "A", "B") ) %>% 
+  arrange(desc(year))
+
+adjusted_weekly_merged_bike%>% 
+  filter(year != 2021 | week != 53) %>%
+  ggplot(aes(x=week))+
+  annotate("rect", xmin=13, xmax=26, ymin=-Inf, ymax=Inf, alpha=0.25, fill="grey") +
+  annotate("rect", xmin=39, xmax=53, ymin=-Inf, ymax=Inf, alpha=0.25, fill="grey") +
+  geom_ribbon(aes(ymin=0,ymax=percentage,fill =group),alpha=0.3,size=0.2)+
+  geom_line(aes(y=percentage))+
+  scale_y_continuous(labels = scales::percent)+
+  scale_x_continuous(breaks = seq(0, 54, by = 13))+
+  labs(title="Weekly changes in Tfl bike rentals",subtitle = "% change from weekly averages \ncalculated between 2016-2019",caption = "Source: Tfl, London Data Store")+
+  scale_fill_manual(values=c("red","green"), name="fill")+
+  ylab(NULL) +
+  xlab("week")+
+  theme_minimal()+
+  theme(panel.grid.major = element_line(size = 0.1, linetype = 'solid', colour = "grey"), 
+  panel.grid.minor = element_line(size = 0.1, linetype = 'solid', colour = "grey")) +
+  theme(legend.position = "none",text = element_text(size=10))+
+  facet_wrap(~year)
+
+```
+

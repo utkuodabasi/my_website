@@ -74,8 +74,8 @@ params:
         url: blogs/cv
       - name: German 2021 Election Poll Study
         url: blogs/US
-      - name: Elements2
-        url: elements.html        
+      - name: Bike Rentals
+        url: blogs/bike        
     menu: Menu
     subtitle: More!
     title: Engage
@@ -94,8 +94,8 @@ params:
         subtitle: German 2021 Election Poll Study
         title: Election prediction
         url: blogs/US
-      - image: pic04.jpg
-        subtitle: Nisl Sed Aliquam
+      - image: bike.jpg
+        subtitle: blogs/bike
         title: Ipsum
         url: blogs/ipsum
       - image: pic05.jpg

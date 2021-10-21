@@ -1,0 +1,114 @@
+---
+title: "A Study Comparing the Bike Rentals in London"
+date: '2021-09-30'
+description: Risk-Return of DJIA stocks
+draft: no
+keywords: ''
+slug: bike
+categories:
+- ''
+- ''
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>url &lt;- &quot;https://data.london.gov.uk/download/number-bicycle-hires/ac29363e-e0cb-47cc-a97a-e216d900a6b0/tfl-daily-cycle-hires.xlsx&quot;
+
+# Download TFL data to temporary file
+httr::GET(url, write_disk(bike.temp &lt;- tempfile(fileext = &quot;.xlsx&quot;)))</code></pre>
+<pre><code>## Response [https://airdrive-secure.s3-eu-west-1.amazonaws.com/london/dataset/number-bicycle-hires/2021-09-23T12%3A52%3A20/tfl-daily-cycle-hires.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAJJDIMAIVZJDICKHA%2F20211021%2Feu-west-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20211021T140342Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=9e3692153d74b9f5eeeaa9299d56e72935771e976805e64dbae2f82683c28443&amp;X-Amz-SignedHeaders=host]
+##   Date: 2021-10-21 14:04
+##   Status: 200
+##   Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+##   Size: 174 kB
+## &lt;ON DISK&gt;  C:\Users\utku9\AppData\Local\Temp\RtmpEX1LnQ\file2c781d227819.xlsx</code></pre>
+<pre class="r"><code># Use read_excel to read it as dataframe
+bike0 &lt;- read_excel(bike.temp,
+                   sheet = &quot;Data&quot;,
+                   range = cell_cols(&quot;A:B&quot;))
+
+# change dates to get year, month, and week
+bike &lt;- bike0 %&gt;% 
+  clean_names() %&gt;% 
+  rename (bikes_hired = number_of_bicycle_hires) %&gt;% 
+  mutate (year = year(day),
+          month = lubridate::month(day, label = TRUE),
+          week = isoweek(day))
+
+
+#get average monthly data
+bike_monthly_average&lt;- bike %&gt;% 
+  filter(year&gt;=2016) %&gt;%
+  filter(year&lt;=2019) %&gt;% 
+  group_by(month) %&gt;% 
+  summarise(monthly_average = mean(bikes_hired))
+
+#merge average monthly data with bike data frame
+merged_bike &lt;- bike %&gt;% 
+  left_join(bike_monthly_average,by=&quot;month&quot;) %&gt;% 
+  mutate(month = month(day))
+
+#Calculate the difference between the expected and actual
+adjusted_merged_bike &lt;- merged_bike %&gt;% 
+  filter(year&gt;=2016) %&gt;%
+  group_by(year,month) %&gt;% 
+  summarise(bike_rentals = mean(bikes_hired),year=year,month=month,monthly_average=monthly_average) %&gt;% 
+  mutate(difference = monthly_average - bike_rentals) %&gt;% 
+  mutate(group=ifelse(difference &lt;= 0, &quot;A&quot;, &quot;B&quot;) )</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;, &#39;month&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>adjusted_merged_bike %&gt;% 
+  ggplot(aes(x=month))+
+  geom_ribbon(aes(ymin=bike_rentals,ymax=monthly_average,fill =group),alpha=0.3,size=0.2)+
+  geom_line(aes(y=bike_rentals))+
+  geom_line(aes(y=monthly_average),color=&quot;blue&quot;)+
+  scale_x_continuous(breaks=NULL)+
+  labs(title=&quot;Monthly changes in Tfl bike rentals&quot;,subtitle = &quot;Change from monthly average shown in \nblue and calculated between 2016-2019&quot;,caption = &quot;Source: Tfl, London Data Store&quot;)+
+  scale_fill_manual(values=c(&quot;green&quot;, &quot;red&quot;), name=&quot;fill&quot;)+
+  xlab(NULL) +
+  ylab(&quot;Bike rentals&quot;)+
+  theme_minimal()+
+  theme(legend.position = &quot;none&quot;,text = element_text(size=10))+
+  geom_vline(xintercept = c(1,2,3,4,5,6,7,8,9,10,11,12),size=0.0001, color=&quot;gray&quot;)+
+  ylim(10000,47000)+
+  facet_wrap(~year)</code></pre>
+<p><img src="/blogs/bike_files/figure-html/unnamed-chunk-1-1.png" width="100%" /></p>
+<pre class="r"><code>#get average weekly data
+bike_weekly_average&lt;- bike %&gt;% 
+  filter(year&gt;=2016) %&gt;%
+  filter(year&lt;=2019) %&gt;% 
+  group_by(week) %&gt;% 
+  summarise(weekly_average = mean(bikes_hired))
+
+#merge average weekly data with bike data frame
+merged_bike_weekly &lt;- bike %&gt;% 
+  left_join(bike_weekly_average,by=&quot;week&quot;)
+  
+#Calculate the difference in percentage from expected
+adjusted_weekly_merged_bike &lt;- merged_bike_weekly %&gt;% 
+  filter(year&gt;=2016) %&gt;%
+  group_by(year,week) %&gt;% 
+  summarise(bike_rentals = mean(bikes_hired),year=year,week=week,weekly_average=weekly_average,) %&gt;%
+  mutate(percentage = (bike_rentals - weekly_average )/weekly_average )%&gt;% 
+  mutate(group=ifelse(percentage &lt;= 0, &quot;A&quot;, &quot;B&quot;) ) %&gt;% 
+  arrange(desc(year))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;, &#39;week&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>adjusted_weekly_merged_bike%&gt;% 
+  filter(year != 2021 | week != 53) %&gt;%
+  ggplot(aes(x=week))+
+  annotate(&quot;rect&quot;, xmin=13, xmax=26, ymin=-Inf, ymax=Inf, alpha=0.25, fill=&quot;grey&quot;) +
+  annotate(&quot;rect&quot;, xmin=39, xmax=53, ymin=-Inf, ymax=Inf, alpha=0.25, fill=&quot;grey&quot;) +
+  geom_ribbon(aes(ymin=0,ymax=percentage,fill =group),alpha=0.3,size=0.2)+
+  geom_line(aes(y=percentage))+
+  scale_y_continuous(labels = scales::percent)+
+  scale_x_continuous(breaks = seq(0, 54, by = 13))+
+  labs(title=&quot;Weekly changes in Tfl bike rentals&quot;,subtitle = &quot;% change from weekly averages \ncalculated between 2016-2019&quot;,caption = &quot;Source: Tfl, London Data Store&quot;)+
+  scale_fill_manual(values=c(&quot;red&quot;,&quot;green&quot;), name=&quot;fill&quot;)+
+  ylab(NULL) +
+  xlab(&quot;week&quot;)+
+  theme_minimal()+
+  theme(panel.grid.major = element_line(size = 0.1, linetype = &#39;solid&#39;, colour = &quot;grey&quot;), 
+  panel.grid.minor = element_line(size = 0.1, linetype = &#39;solid&#39;, colour = &quot;grey&quot;)) +
+  theme(legend.position = &quot;none&quot;,text = element_text(size=10))+
+  facet_wrap(~year)</code></pre>
+<p><img src="/blogs/bike_files/figure-html/unnamed-chunk-1-2.png" width="100%" /></p>
