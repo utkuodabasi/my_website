@@ -103,7 +103,7 @@ params:
       - image: yield.jpg
         subtitle: A Study about Tresuary Yields
         title: Yields
-        url: blogs/yields
+        url: blogs/yield
 #      - image: pic06.jpg
 #        subtitle: Feugiat Amet Tempus
 #        title: Etiam
