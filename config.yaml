@@ -75,7 +75,9 @@ params:
       - name: German 2021 Election Poll Study
         url: blogs/US
       - name: Bike Rentals
-        url: blogs/bike        
+        url: blogs/bike
+      - name: Yields
+        url: blogs/yield      
     menu: Menu
     subtitle: More!
     title: Engage
@@ -95,17 +97,17 @@ params:
         title: Election prediction
         url: blogs/US
       - image: bike.jpg
-        subtitle: A study about bike rentals
+        subtitle: A Study about bike rentals
         title: Bike Rentals
         url: blogs/bike
-      - image: pic05.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Consequat
-        url: blogs/ipsum
-      - image: pic06.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Etiam
-        url: blogs/ipsum
+      - image: yield.jpg
+        subtitle: A Study about Tresuary Yields
+        title: Yields
+        url: blogs/yields
+#      - image: pic06.jpg
+#        subtitle: Feugiat Amet Tempus
+#        title: Etiam
+#        url: blogs/ipsum
   two:
     buttonText: Get Started
     enable: yes

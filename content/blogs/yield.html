@@ -1,0 +1,46 @@
+---
+title: "A study investigating the yields curves of Tresuary Bonds"
+date: '2021-09-30'
+description: Risk-Return of DJIA stocks
+draft: no
+keywords: ''
+slug: yield
+categories:
+- ''
+- ''
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>yield_curve &lt;- read_csv(here::here(&quot;data&quot;, &quot;yield_curve.csv&quot;))</code></pre>
+<pre><code>## Rows: 6884 Columns: 5</code></pre>
+<pre><code>## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;,&quot;
+## chr  (3): series_id, maturity, duration
+## dbl  (1): value
+## date (1): date</code></pre>
+<pre><code>## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>#PLotting a graph of rates since 1960 
+yield_curve %&gt;% 
+  ggplot(aes(x=date,y=value,color = duration))+
+  geom_line(size=0.2)+
+  
+#Faceting the graphs by duration
+facet_wrap(~ factor(duration, 
+                        levels = c(&quot;3-Month Treasury Bill&quot;,
+                                   &quot;6-Month Treasury Bill&quot;,
+                                   &quot;1-Year Treasury Rate&quot;,
+                                   &quot;2-Year Treasury Rate&quot;,
+                                   &quot;3-Year Treasury Rate&quot;,
+                                   &quot;5-Year Treasury Rate&quot;,
+                                   &quot;7-Year Treasury Rate&quot;,
+                                   &quot;10-Year Treasury Rate&quot;,
+                                   &quot;20-Year Treasury Rate&quot;,
+                                   &quot;30-Year Treasury Rate&quot;)), 
+               ncol = 2)+
+  theme_bw()+
+  labs(title=&quot;Yiels of U.S Treasury rates since 1960&quot;,color=&quot;&quot;)</code></pre>
+<p><img src="/blogs/yield_files/figure-html/unnamed-chunk-1-1.png" width="100%" /></p>

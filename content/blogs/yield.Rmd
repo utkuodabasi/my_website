@@ -1,0 +1,60 @@
+---
+title: "A study investigating the yields curves of Tresuary Bonds"
+date: '2021-09-30'
+description: Risk-Return of DJIA stocks
+draft: no
+keywords: ''
+slug: yield
+categories:
+- ''
+- ''
+---
+  
+  
+  
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest) # to scrape wikipedia page
+library(scales)
+library(infer)
+library(readxl)
+library(httr)
+```
+
+  
+```{r,out.width="100%"}
+
+yield_curve <- read_csv(here::here("data", "yield_curve.csv"))
+#PLotting a graph of rates since 1960 
+yield_curve %>% 
+  ggplot(aes(x=date,y=value,color = duration))+
+  geom_line(size=0.2)+
+  
+#Faceting the graphs by duration
+facet_wrap(~ factor(duration, 
+                        levels = c("3-Month Treasury Bill",
+                                   "6-Month Treasury Bill",
+                                   "1-Year Treasury Rate",
+                                   "2-Year Treasury Rate",
+                                   "3-Year Treasury Rate",
+                                   "5-Year Treasury Rate",
+                                   "7-Year Treasury Rate",
+                                   "10-Year Treasury Rate",
+                                   "20-Year Treasury Rate",
+                                   "30-Year Treasury Rate")), 
+               ncol = 2)+
+  theme_bw()+
+  labs(title="Yiels of U.S Treasury rates since 1960",color="")
+
+
+```
+
